@@ -1,0 +1,34 @@
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: slim-php-app
+        ports:
+            - "8080:8080"
+        volumes:
+            - .:/var/www/html
+        networks:
+            - app-network
+        depends_on:
+            - db
+
+    db:
+        image: mysql:8.0
+        container_name: slim-mysql-db
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: test
+        volumes:
+            - db_data:/var/lib/mysql
+        ports:
+            - "3306:3306"
+        networks:
+            - app-network
+
+networks:
+    app-network:
+        driver: bridge
+
+volumes:
+    db_data:
